@@ -25,6 +25,17 @@ mongoose.connect(
   }
 );
 
+//Create Socket and listen for save book event
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+io.on('connection', (socket) => {
+  socket.on('book saved', function(msg) {
+    //emit book saved event to all users
+    io.emit('book saved', msg);
+  });
+});
+server.listen(PORT);
+
 // Start the API server
 app.listen(PORT, () =>
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`)
